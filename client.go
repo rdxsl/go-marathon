@@ -330,6 +330,8 @@ func (r *marathonClient) apiDelete(path string, post, result interface{}) error 
 func (r *marathonClient) apiCall(method, path string, body, result interface{}) error {
 	const deploymentHeader = "Marathon-Deployment-Id"
 
+	timeouts := make(map[string]int)
+
 	for {
 		// step: marshall the request to json
 		var requestBody []byte
@@ -349,9 +351,15 @@ func (r *marathonClient) apiCall(method, path string, body, result interface{}) 
 		// step: perform the API request
 		response, err := r.client.Do(request)
 		if err != nil {
-			r.hosts.markDown(member)
-			// step: attempt the request on another member
-			r.debugLog("apiCall(): request failed on host: %s, error: %s, trying another", member, err)
+			if _, ok := timeouts[member]; !ok {
+				timeouts[member] = 0
+			}
+			timeouts[member]++
+			if timeouts[member] > 3 {
+				r.hosts.markDown(member)
+				// step: attempt the request on another member
+				r.debugLog("apiCall(): request failed on host: %s, error: %s, trying another", member, err)
+			}
 			continue
 		}
 		defer response.Body.Close()
