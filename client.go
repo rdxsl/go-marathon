@@ -186,7 +186,7 @@ type Marathon interface {
 
 var (
 	// ErrMarathonDown is thrown when all the marathon endpoints are down
-	ErrMarathonDown = errors.New("all the Marathon hosts are presently down")
+	ErrMarathonDown = errors.New("all the Marathon master hosts are presently down or unavailable")
 	// ErrTimeoutError is thrown when the operation has timed out
 	ErrTimeoutError = errors.New("the operation has timed out")
 
