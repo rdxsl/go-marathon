@@ -230,6 +230,8 @@ type marathonClient struct {
 	hosts *cluster
 	// a map of service you wish to listen to
 	listeners map[EventsChannel]EventsChannelContext
+	// a channel to close the SSE stream
+	closeSSEStreamChan chan bool
 	// a custom log function for debug messages
 	debugLog func(format string, v ...interface{})
 	// the marathon HTTP client to ensure consistency in requests
@@ -286,11 +288,12 @@ func NewClient(config Config) (Marathon, error) {
 	}
 
 	return &marathonClient{
-		config:    config,
-		listeners: make(map[EventsChannel]EventsChannelContext),
-		hosts:     hosts,
-		debugLog:  debugLog,
-		client:    client,
+		config:             config,
+		listeners:          make(map[EventsChannel]EventsChannelContext),
+		closeSSEStreamChan: make(chan bool),
+		hosts:              hosts,
+		debugLog:           debugLog,
+		client:             client,
 	}, nil
 }
 
