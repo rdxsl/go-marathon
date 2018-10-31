@@ -76,8 +76,15 @@ func (r *marathonClient) RemoveEventsListener(channel EventsChannel) {
 		delete(r.listeners, channel)
 		// step: if there is no one else listening, let's remove ourselves
 		// from the events callback
-		if r.config.EventsTransport == EventsTransportCallback && len(r.listeners) == 0 {
-			r.Unsubscribe(r.SubscriptionURL())
+		if len(r.listeners) == 0 {
+			switch r.config.EventsTransport {
+			case EventsTransportCallback:
+				r.Unsubscribe(r.SubscriptionURL())
+			case EventsTransportSSE:
+				r.closeSSEStreamChan <- true
+			default:
+				r.debugLog("failed to remove events listener: the events transport: %d is not supported", r.config.EventsTransport)
+			}
 		}
 
 		// step: wait for pending goroutines to finish and close channel
@@ -187,8 +194,10 @@ func (r *marathonClient) registerSSESubscription() error {
 				continue
 			}
 			err = r.listenToSSE(stream)
+			if err != nil {
+				r.debugLog("Error on SSE subscription: %s", err)
+			}
 			stream.Close()
-			r.debugLog("Error on SSE subscription: %s", err)
 		}
 	}()
 
@@ -235,6 +244,9 @@ func (r *marathonClient) connectToSSE() (*eventsource.Stream, error) {
 func (r *marathonClient) listenToSSE(stream *eventsource.Stream) error {
 	for {
 		select {
+		case <-r.closeSSEStreamChan:
+			stream.Close()
+			return nil
 		case ev := <-stream.Events:
 			if err := r.handleEvent(ev.Data()); err != nil {
 				r.debugLog("listenToSSE(): failed to handle event: %v", err)
