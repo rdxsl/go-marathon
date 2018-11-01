@@ -194,10 +194,12 @@ func (r *marathonClient) registerSSESubscription() error {
 				continue
 			}
 			err = r.listenToSSE(stream)
-			if err != nil {
-				r.debugLog("Error on SSE subscription: %s", err)
-			}
 			stream.Close()
+			if err != nil {
+				r.debugLog("Error on SSE subscription: %s. Reconnecting.", err)
+				continue
+			}
+			return
 		}
 	}()
 
@@ -245,7 +247,6 @@ func (r *marathonClient) listenToSSE(stream *eventsource.Stream) error {
 	for {
 		select {
 		case <-r.closeSSEStreamChan:
-			stream.Close()
 			return nil
 		case ev := <-stream.Events:
 			if err := r.handleEvent(ev.Data()); err != nil {
@@ -253,7 +254,6 @@ func (r *marathonClient) listenToSSE(stream *eventsource.Stream) error {
 			}
 		case err := <-stream.Errors:
 			return err
-
 		}
 	}
 }
