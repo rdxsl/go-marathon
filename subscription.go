@@ -194,9 +194,10 @@ func (r *marathonClient) registerSSESubscription() error {
 				continue
 			}
 			err = r.listenToSSE(stream)
-			if err != nil {
-				r.debugLog("Error on SSE subscription: %s", err)
+			if err == nil {
+				return
 			}
+			r.debugLog("Error on SSE subscription: %s", err)
 			stream.Close()
 		}
 	}()
