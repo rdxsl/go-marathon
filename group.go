@@ -27,6 +27,7 @@ type Group struct {
 	Apps         []*Application `json:"apps"`
 	Dependencies []string       `json:"dependencies"`
 	Groups       []*Group       `json:"groups"`
+	Pods         []*Pod         `json:"pods"`
 }
 
 // Groups is a collection of marathon application groups
