@@ -21,11 +21,12 @@ import (
 	"time"
 )
 
+// Queue represents a response from the /v2/queue API
 type Queue struct {
 	Items []Item `json:"queue"`
 }
 
-// Queue is the definition of marathon queue
+// Item represents a single item in the Queue.  These are generally tied to an application or pod
 type Item struct {
 	Count                  int                     `json:"count,omitempty"`
 	Delay                  *Delay                  `json:"delay,omitempty"`
@@ -60,7 +61,7 @@ type Offer struct {
 	ID         string           `json:"id"`
 	AgentID    string           `json:"agentId"`
 	Hostname   string           `json:"hostname"`
-	Resources  []OfferResources `json:"resources"` // modified name; Resources already exists
+	Resources  []OfferResources `json:"resources"`
 	Attributes []Attributes     `json:"attributes"`
 }
 
