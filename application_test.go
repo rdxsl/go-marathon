@@ -104,7 +104,7 @@ func TestApplicationString(t *testing.T) {
 			panic(err)
 		}
 		expectedAppJSON := strings.TrimSpace(string(expectedAppJSONBytes))
-		assert.Equal(t, expectedAppJSON, test.app.String(), label)
+		assert.JSONEq(t, expectedAppJSON, test.app.String(), label)
 	}
 }
 func TestApplicationCount(t *testing.T) {
