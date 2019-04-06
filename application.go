@@ -84,7 +84,7 @@ type Application struct {
 	Deployments                []map[string]string `json:"deployments,omitempty"`
 	// Available when embedding readiness information through query parameter.
 	ReadinessCheckResults *[]ReadinessCheckResult `json:"readinessCheckResults,omitempty"`
-	Dependencies          []string                `json:"dependencies"`
+	Dependencies          []string                `json:"dependencies,omitempty"`
 	TasksRunning          int                     `json:"tasksRunning,omitempty"`
 	TasksStaged           int                     `json:"tasksStaged,omitempty"`
 	TasksHealthy          int                     `json:"tasksHealthy,omitempty"`

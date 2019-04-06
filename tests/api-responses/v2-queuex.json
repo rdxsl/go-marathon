@@ -1,0 +1,189 @@
+{
+    "queue": [
+      {
+        "count": 1,
+        "delay": {
+          "timeLeftSeconds": 0,
+          "overdue": true
+        },
+        "since": "2019-04-05T01:01:01.434Z",
+        "processedOffersSummary": {
+          "processedOffersCount": 21,
+          "unusedOffersCount": 21,
+          "lastUnusedOfferAt": "2019-04-05T01:01:11.474Z",
+          "rejectSummaryLastOffers": [
+            {
+              "reason": "UnfulfilledRole",
+              "declined": 0,
+              "processed": 7
+            },
+            {
+              "reason": "UnfulfilledConstraint",
+              "declined": 4,
+              "processed": 7
+            },
+            {
+              "reason": "NoCorrespondingReservationFound",
+              "declined": 0,
+              "processed": 3
+            },
+            {
+              "reason": "AgentMaintenance",
+              "declined": 0,
+              "processed": 3
+            },
+            {
+              "reason": "InsufficientCpus",
+              "declined": 3,
+              "processed": 3
+            },
+            {
+              "reason": "InsufficientMemory",
+              "declined": 0,
+              "processed": 0
+            },
+            {
+              "reason": "InsufficientDisk",
+              "declined": 0,
+              "processed": 0
+            },
+            {
+              "reason": "InsufficientGpus",
+              "declined": 0,
+              "processed": 0
+            },
+            {
+              "reason": "InsufficientPorts",
+              "declined": 0,
+              "processed": 0
+            },
+            {
+              "reason": "DeclinedScarceResources",
+              "declined": 0,
+              "processed": 0
+            }
+          ],
+          "rejectSummaryLaunchAttempt": [
+            {
+              "reason": "UnfulfilledRole",
+              "declined": 0,
+              "processed": 21
+            },
+            {
+              "reason": "UnfulfilledConstraint",
+              "declined": 12,
+              "processed": 21
+            },
+            {
+              "reason": "NoCorrespondingReservationFound",
+              "declined": 0,
+              "processed": 9
+            },
+            {
+              "reason": "AgentMaintenance",
+              "declined": 0,
+              "processed": 9
+            },
+            {
+              "reason": "InsufficientCpus",
+              "declined": 9,
+              "processed": 9
+            },
+            {
+              "reason": "InsufficientMemory",
+              "declined": 0,
+              "processed": 0
+            },
+            {
+              "reason": "InsufficientDisk",
+              "declined": 0,
+              "processed": 0
+            },
+            {
+              "reason": "InsufficientGpus",
+              "declined": 0,
+              "processed": 0
+            },
+            {
+              "reason": "InsufficientPorts",
+              "declined": 0,
+              "processed": 0
+            },
+            {
+              "reason": "DeclinedScarceResources",
+              "declined": 0,
+              "processed": 0
+            }
+          ]
+        },
+        "pod": {
+          "id": "/foo/test.app",
+          "labels": {
+            "appname": "test.app"
+          },
+          "version": "2019-04-05T01:01:01.417Z",
+          "user": "root",
+          "environment": {
+            "SOME_ENV" : "BAR"
+          },
+          "containers": [
+            {
+              "name": "toomuchcpu",
+              "resources": {
+                "cpus": 99,
+                "mem": 256
+              },
+              "image": {
+                "kind": "DOCKER",
+                "id": "some.docker.reg/foo/test.app:1.0.0"
+              },
+              "lifecycle": {}
+            }
+          ],
+          "networks": [
+            {
+              "name": "test-cni",
+              "mode": "container",
+              "labels": {
+                "appname": "test.app"
+              }
+            }
+          ],
+          "scaling": {
+            "kind": "fixed",
+            "instances": 1
+          },
+          "scheduling": {
+            "backoff": {
+              "backoff": 1,
+              "backoffFactor": 1.15,
+              "maxLaunchDelay": 3600
+            },
+            "upgrade": {
+              "minimumHealthCapacity": 1,
+              "maximumOverCapacity": 1
+            },
+            "placement": {
+              "constraints": [
+                {
+                  "fieldName": "class",
+                  "operator": "CLUSTER",
+                  "value": "compute"
+                }
+              ]
+            },
+            "killSelection": "YOUNGEST_FIRST",
+            "unreachableStrategy": {
+              "inactiveAfterSeconds": 0,
+              "expungeAfterSeconds": 0
+            }
+          },
+          "executorResources": {
+            "cpus": 0.1,
+            "mem": 32,
+            "disk": 10
+          }
+        }
+      }
+    ]
+  }
