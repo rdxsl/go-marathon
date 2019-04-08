@@ -37,6 +37,7 @@ type Item struct {
 	LastUnusedOffers       []LastUnusedOffers      `json:"lastUnusedOffers,omitempty"`
 }
 
+// Delay cotains the application postpone information
 type Delay struct {
 	TimeLeftSeconds int  `json:"timeLeftSeconds"`
 	Overdue         bool `json:"overdue"`
