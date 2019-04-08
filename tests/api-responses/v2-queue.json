@@ -131,7 +131,9 @@
             "name": "toomuchcpu",
             "resources": {
               "cpus": 99,
-              "mem": 256
+              "mem": 256,
+              "disk": 0,
+              "gpus": 0
             },
             "image": {
               "kind": "DOCKER",
