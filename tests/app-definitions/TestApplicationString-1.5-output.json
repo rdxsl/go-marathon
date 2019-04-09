@@ -44,7 +44,6 @@
   "instances": 2,
   "mem": 64,
   "ports": null,
-  "dependencies": null,
   "env": {
     "NAME": "frontend_http",
     "SERVICE_80_NAME": "test_http"

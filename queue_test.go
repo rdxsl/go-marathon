@@ -17,6 +17,9 @@ limitations under the License.
 package marathon
 
 import (
+	"bytes"
+	"encoding/json"
+	"io/ioutil"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -44,4 +47,21 @@ func TestDeleteQueueDelay(t *testing.T) {
 
 	err := endpoint.Client.DeleteQueueDelay(fakeAppName)
 	assert.NoError(t, err)
+}
+
+func TestQueueStruct(t *testing.T) {
+	// Sample from the Marathon API, and an additional pod based sample.  Verify it Unmarshals and Marshals without loss.
+	ex, err := ioutil.ReadFile("tests/api-responses/v2-queue.json")
+	assert.Nil(t, err)
+
+	expectedBytes := bytes.ReplaceAll(ex, []byte("\r"), []byte(""))
+
+	queueExpected := &Queue{}
+	err = json.Unmarshal(expectedBytes, queueExpected)
+	assert.Nil(t, err)
+
+	actualBytes, err := json.MarshalIndent(queueExpected, "", "  ")
+	assert.Nil(t, err)
+
+	assert.JSONEq(t, string(expectedBytes), string(actualBytes))
 }

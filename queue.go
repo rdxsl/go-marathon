@@ -18,24 +18,79 @@ package marathon
 
 import (
 	"fmt"
+	"time"
 )
 
-// Queue is the definition of marathon queue
+// Queue represents a response from the /v2/queue API
 type Queue struct {
 	Items []Item `json:"queue"`
 }
 
-// Item is the definition of element in the queue
+// Item represents a single item in the Queue.  These are generally tied to an application or pod
 type Item struct {
-	Count       int         `json:"count"`
-	Delay       Delay       `json:"delay"`
-	Application Application `json:"app"`
+	Count                  int                     `json:"count,omitempty"`
+	Delay                  *Delay                  `json:"delay,omitempty"`
+	Since                  time.Time               `json:"since"`
+	Application            *Application            `json:"app,omitempty"`
+	Pod                    *Pod                    `json:"pod,omitempty"`
+	ProcessedOffersSummary *ProcessedOffersSummary `json:"processedOffersSummary,omitempty"`
+	LastUnusedOffers       []LastUnusedOffers      `json:"lastUnusedOffers,omitempty"`
 }
 
 // Delay cotains the application postpone information
 type Delay struct {
-	Overdue         bool `json:"overdue"`
 	TimeLeftSeconds int  `json:"timeLeftSeconds"`
+	Overdue         bool `json:"overdue"`
+}
+
+type ProcessedOffersSummary struct {
+	ProcessedOffersCount       int             `json:"processedOffersCount"`
+	UnusedOffersCount          int             `json:"unusedOffersCount"`
+	LastUnusedOfferAt          *time.Time      `json:"lastUnusedOfferAt,omitempty"`
+	LastUsedOfferAt            *time.Time      `json:"lastUsedOfferAt,omitempty"`
+	RejectSummaryLastOffers    []RejectSummary `json:"rejectSummaryLastOffers,omitempty"`
+	RejectSummaryLaunchAttempt []RejectSummary `json:"rejectSummaryLaunchAttempt,omitempty"`
+}
+
+type LastUnusedOffers struct {
+	Offer     Offer     `json:"offer"`
+	Timestamp time.Time `json:"timestamp"`
+	Reason    []string  `json:"reason"`
+}
+
+type Offer struct {
+	ID         string           `json:"id"`
+	AgentID    string           `json:"agentId"`
+	Hostname   string           `json:"hostname"`
+	Resources  []OfferResources `json:"resources"`
+	Attributes []Attributes     `json:"attributes"`
+}
+
+type OfferResources struct {
+	Name   string   `json:"name"`
+	Scalar int      `json:"scalar"`
+	Ranges []Range  `json:"ranges"`
+	Set    []string `json:"set"`
+	Role   string   `json:"role"`
+}
+
+type Attributes struct {
+	Name   string   `json:"name"`
+	Scalar int      `json:"scalar"`
+	Ranges []Range  `json:"ranges"`
+	Set    []string `json:"set"`
+}
+
+type Range struct {
+	Begin int `json:"begin"`
+	End   int `json:"end"`
+}
+
+// RejectSummary documents the reason and number of times a specific rejection occurred
+type RejectSummary struct {
+	Reason    string `json:"reason"`
+	Declined  int    `json:"declined"`
+	Processed int    `json:"processed"`
 }
 
 // Queue retrieves content of the marathon launch queue
