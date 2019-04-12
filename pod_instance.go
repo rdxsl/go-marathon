@@ -75,13 +75,13 @@ type PodTaskCondition string
 
 func (c PodTaskCondition) UnmarshalJSON(b []byte) (err error) {
 	/* Supports both:
-		"condition": {
-	      "str": "running"
-	    }
+	"condition": {
+		"str": "running"
+	}
 
-		and:
+	and:
 
-	    "condition" : "running"
+	"condition" : "running"
 	*/
 
 	var condObj struct {
