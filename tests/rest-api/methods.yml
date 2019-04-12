@@ -1155,58 +1155,6 @@
 
       }
     }
-- uri: /v2/pods/fake-pod2::instances/fake-pod2.instance-63c9735b-5ca0-11e9-98d6-1eb6fdf96d81
-  method: DELETE
-  content: |
-    {
-      "instanceId": {
-        "idString": "fake-pod2.instance-63c9735b-5ca0-11e9-98d6-1eb6fdf96d81"
-      },
-      "agentInfo": {
-        "host": "10.12.13.14",
-        "agentId": "faa48e7c-8c24-4ad6-81e9-cb0a1603de1d-S6",
-        "region": "aws/usw3",
-        "zone": "aws/us-west-2a",
-        "attributes": [
-          "x1",
-          "x2",
-          "x3"
-        ]
-      },
-      "tasksMap": {
-        "fake-pod2.instance-63c9735b-5ca0-11e9-98d6-1eb6fdf96d81.testapp1": {
-          "taskId": "fake-pod2.instance-63c9735b-5ca0-11e9-98d6-1eb6fdf96d81.testapp1",
-          "runSpecVersion": "2019-04-11T21:03:21.709Z",
-          "status": {
-            "stagedAt": "2019-04-11T21:25:55.019Z",
-            "startedAt": "2019-04-11T21:25:57.429Z",
-            "mesosStatus": "abcdef",
-            "condition": "Running",
-            "networkInfo": {
-              "hostName": "10.12.13.14",
-              "hostPorts": [],
-              "ipAddresses": [
-                {
-                  "ipAddress": "10.15.16.17",
-                  "protocol": "IPv4"
-                }
-              ]
-            }
-          }
-        }
-      },
-      "runSpecVersion": "2019-04-11T21:03:21.709Z",
-      "state": {
-        "condition": "Running",
-        "since": "2019-04-11T21:25:57.429Z",
-        "activeSince": "2019-04-11T21:25:57.429Z",
-        "goal": "Running"
-      },
-      "unreachableStrategy": {
-        "inactiveAfterSeconds": 0,
-        "expungeAfterSeconds": 0
-      }
-    }
 - uri: /v2/pods/fake-pod::instances/fake-pod.instance-dc6cfe60-6812-11e7-a18e-70b3d5800003
   method: DELETE
   content: |

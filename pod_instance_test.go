@@ -24,7 +24,6 @@ import (
 )
 
 const fakePodInstanceName = "fake-pod.instance-dc6cfe60-6812-11e7-a18e-70b3d5800003"
-const secondFakePodInstanceName = "fake-pod2.instance-63c9735b-5ca0-11e9-98d6-1eb6fdf96d81"
 
 func TestDeletePodInstance(t *testing.T) {
 	endpoint := newFakeMarathonEndpoint(t, nil)
@@ -33,10 +32,6 @@ func TestDeletePodInstance(t *testing.T) {
 	podInstance, err := endpoint.Client.DeletePodInstance(fakePodName, fakePodInstanceName)
 	require.NoError(t, err)
 	assert.Equal(t, podInstance.InstanceID.ID, fakePodInstanceName)
-
-	podInstance2, err := endpoint.Client.DeletePodInstance(secondFakePodName, secondFakePodInstanceName)
-	require.NoError(t, err)
-	assert.Equal(t, podInstance2.InstanceID.ID, secondFakePodInstanceName)
 }
 
 func TestDeletePodInstances(t *testing.T) {
