@@ -34,10 +34,10 @@ type PodInstance struct {
 
 // PodInstanceStateHistory is the pod instance's state
 type PodInstanceStateHistory struct {
-	Condition   Condition `json:"condition"`
-	Since       time.Time `json:"since"`
-	ActiveSince time.Time `json:"activeSince"`
-	Goal        string    `json:"goal"`
+	Condition   PodTaskCondition `json:"condition"`
+	Since       time.Time        `json:"since"`
+	ActiveSince time.Time        `json:"activeSince"`
+	Goal        string           `json:"goal"`
 }
 
 // PodInstanceID contains the instance ID
@@ -63,17 +63,17 @@ type PodTask struct {
 
 // PodTaskStatus is the current status of the task
 type PodTaskStatus struct {
-	StagedAt    time.Time      `json:"stagedAt"`
-	StartedAt   time.Time      `json:"startedAt"`
-	MesosStatus string         `json:"mesosStatus"`
-	Condition   Condition      `json:"condition"`
-	NetworkInfo PodNetworkInfo `json:"networkInfo"`
+	StagedAt    time.Time        `json:"stagedAt"`
+	StartedAt   time.Time        `json:"startedAt"`
+	MesosStatus string           `json:"mesosStatus"`
+	Condition   PodTaskCondition `json:"condition"`
+	NetworkInfo PodNetworkInfo   `json:"networkInfo"`
 }
 
 // Condition is a string with an overloaded UnmarshalJSON method to help it support old and new formats for the condition value
-type Condition string
+type PodTaskCondition string
 
-func (c Condition) UnmarshalJSON(b []byte) (err error) {
+func (c PodTaskCondition) UnmarshalJSON(b []byte) (err error) {
 	/* Supports both:
 		"condition": {
 	      "str": "running"
@@ -93,9 +93,9 @@ func (c Condition) UnmarshalJSON(b []byte) (err error) {
 		if err != nil {
 			return err
 		}
-		c = Condition(str)
+		c = PodTaskCondition(str)
 	} else {
-		c = Condition(condObj.Str)
+		c = PodTaskCondition(condObj.Str)
 	}
 	return nil
 }
