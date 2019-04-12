@@ -17,6 +17,7 @@ limitations under the License.
 package marathon
 
 import (
+	"encoding/json"
 	"fmt"
 	"time"
 )
@@ -33,9 +34,10 @@ type PodInstance struct {
 
 // PodInstanceStateHistory is the pod instance's state
 type PodInstanceStateHistory struct {
-	Condition   PodTaskCondition `json:"condition"`
-	Since       time.Time        `json:"since"`
-	ActiveSince time.Time        `json:"activeSince"`
+	Condition   Condition `json:"condition"`
+	Since       time.Time `json:"since"`
+	ActiveSince time.Time `json:"activeSince"`
+	Goal        string    `json:"goal"`
 }
 
 // PodInstanceID contains the instance ID
@@ -48,6 +50,8 @@ type PodAgentInfo struct {
 	Host       string   `json:"host"`
 	AgentID    string   `json:"agentId"`
 	Attributes []string `json:"attributes"`
+	Region     string   `json:"region"`
+	Zone       string   `json:"zone"`
 }
 
 // PodTask contains the info about the specific task within the instance
@@ -59,16 +63,41 @@ type PodTask struct {
 
 // PodTaskStatus is the current status of the task
 type PodTaskStatus struct {
-	StagedAt    time.Time        `json:"stagedAt"`
-	StartedAt   time.Time        `json:"startedAt"`
-	MesosStatus string           `json:"mesosStatus"`
-	Condition   PodTaskCondition `json:"condition"`
-	NetworkInfo PodNetworkInfo   `json:"networkInfo"`
+	StagedAt    time.Time      `json:"stagedAt"`
+	StartedAt   time.Time      `json:"startedAt"`
+	MesosStatus string         `json:"mesosStatus"`
+	Condition   Condition      `json:"condition"`
+	NetworkInfo PodNetworkInfo `json:"networkInfo"`
 }
 
-// PodTaskCondition contains a string representation of the condition
-type PodTaskCondition struct {
-	Str string `json:"str"`
+// Condition is a string with an overloaded UnmarshalJSON method to help it support old and new formats for the condition value
+type Condition string
+
+func (c Condition) UnmarshalJSON(b []byte) (err error) {
+	/* Supports both:
+		"condition": {
+	      "str": "running"
+	    }
+
+		and:
+
+	    "condition" : "running"
+	*/
+
+	var condObj struct {
+		Str string `json:"str"`
+	}
+	if err := json.Unmarshal(b, &condObj); err != nil {
+		var str string
+		err = json.Unmarshal(b, &str)
+		if err != nil {
+			return err
+		}
+		c = Condition(str)
+	} else {
+		c = Condition(condObj.Str)
+	}
+	return nil
 }
 
 // PodNetworkInfo contains the network info for a task
