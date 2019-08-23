@@ -17,9 +17,6 @@ limitations under the License.
 package marathon
 
 import (
-	"bytes"
-	"encoding/json"
-	"io/ioutil"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -33,12 +30,12 @@ func TestQueue(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotNil(t, queue)
 
-	assert.Len(t, queue.Items, 1)
+	assert.Len(t, queue.Items, 3)
 	item := queue.Items[0]
-	assert.Equal(t, item.Count, 10)
+	assert.Equal(t, item.Count, 1)
 	assert.Equal(t, item.Delay.Overdue, true)
-	assert.Equal(t, item.Delay.TimeLeftSeconds, 784)
-	assert.NotEmpty(t, item.Application.ID)
+	assert.Equal(t, item.Delay.TimeLeftSeconds, 0)
+	assert.NotEmpty(t, item.Pod.ID)
 }
 
 func TestDeleteQueueDelay(t *testing.T) {
@@ -47,21 +44,4 @@ func TestDeleteQueueDelay(t *testing.T) {
 
 	err := endpoint.Client.DeleteQueueDelay(fakeAppName)
 	assert.NoError(t, err)
-}
-
-func TestQueueStruct(t *testing.T) {
-	// Sample from the Marathon API, and an additional pod based sample.  Verify it Unmarshals and Marshals without loss.
-	ex, err := ioutil.ReadFile("tests/api-responses/v2-queue.json")
-	assert.Nil(t, err)
-
-	expectedBytes := bytes.ReplaceAll(ex, []byte("\r"), []byte(""))
-
-	queueExpected := &Queue{}
-	err = json.Unmarshal(expectedBytes, queueExpected)
-	assert.Nil(t, err)
-
-	actualBytes, err := json.MarshalIndent(queueExpected, "", "  ")
-	assert.Nil(t, err)
-
-	assert.JSONEq(t, string(expectedBytes), string(actualBytes))
 }
