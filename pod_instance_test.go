@@ -32,11 +32,12 @@ func TestDeletePodInstance(t *testing.T) {
 
 	podInstance, err := endpoint.Client.DeletePodInstance(fakePodName, fakePodInstanceName)
 	require.NoError(t, err)
-	assert.Equal(t, podInstance.InstanceID.ID, fakePodInstanceName)
+
+	assert.Equal(t, string(podInstance.InstanceID), fakePodInstanceName)
 
 	podInstance2, err := endpoint.Client.DeletePodInstance(secondFakePodName, secondFakePodInstanceName)
 	require.NoError(t, err)
-	assert.Equal(t, podInstance2.InstanceID.ID, secondFakePodInstanceName)
+	assert.Equal(t, string(podInstance2.InstanceID), secondFakePodInstanceName)
 }
 
 func TestDeletePodInstances(t *testing.T) {
@@ -46,5 +47,5 @@ func TestDeletePodInstances(t *testing.T) {
 	instances := []string{fakePodInstanceName}
 	podInstances, err := endpoint.Client.DeletePodInstances(fakePodName, instances)
 	require.NoError(t, err)
-	assert.Equal(t, podInstances[0].InstanceID.ID, fakePodInstanceName)
+	assert.Equal(t, string(podInstances[0].InstanceID), fakePodInstanceName)
 }

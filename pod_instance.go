@@ -41,8 +41,34 @@ type PodInstanceStateHistory struct {
 }
 
 // PodInstanceID contains the instance ID
-type PodInstanceID struct {
-	ID string `json:"idString"`
+type PodInstanceID string
+
+func (p *PodInstanceID) UnmarshalJSON(b []byte) (err error) {
+	/* Supports both:
+	  "instanceId": {
+	    "idString": "a.b.c.d.e"
+	  },
+
+		and:
+
+		"instanceId" : "a.b.c.d.e"
+	*/
+
+	var instanceIDObj struct {
+		IDString string `json:"idString"`
+	}
+	if err := json.Unmarshal(b, &instanceIDObj); err != nil {
+		var idStr string
+		err = json.Unmarshal(b, &idStr)
+		if err != nil {
+			return err
+		}
+		*p = PodInstanceID(idStr)
+	} else {
+		*p = PodInstanceID(instanceIDObj.IDString)
+	}
+
+	return nil
 }
 
 // PodAgentInfo contains info about the agent the instance is running on
@@ -73,7 +99,7 @@ type PodTaskStatus struct {
 // Condition is a string with an overloaded UnmarshalJSON method to help it support old and new formats for the condition value
 type PodTaskCondition string
 
-func (c PodTaskCondition) UnmarshalJSON(b []byte) (err error) {
+func (c *PodTaskCondition) UnmarshalJSON(b []byte) (err error) {
 	/* Supports both:
 	"condition": {
 		"str": "running"
@@ -93,10 +119,11 @@ func (c PodTaskCondition) UnmarshalJSON(b []byte) (err error) {
 		if err != nil {
 			return err
 		}
-		c = PodTaskCondition(str)
+		*c = PodTaskCondition(str)
 	} else {
-		c = PodTaskCondition(condObj.Str)
+		*c = PodTaskCondition(condObj.Str)
 	}
+
 	return nil
 }
 
