@@ -34,7 +34,7 @@ type Item struct {
 	Application            *Application           `json:"app,omitempty"`
 	Pod                    *Pod                   `json:"pod,omitempty"`
 	ProcessedOffersSummary ProcessedOffersSummary `json:"processedOffersSummary,omitempty"`
-	LastUnusedOffers       []LastUnusedOffers     `json:"lastUnusedOffers,omitempty"`
+	LastUnusedOffers       []UnusedOffer          `json:"lastUnusedOffers,omitempty"`
 	Role                   string                 `json:"role"`
 }
 
@@ -42,29 +42,6 @@ type Item struct {
 type Delay struct {
 	TimeLeftSeconds int  `json:"timeLeftSeconds"`
 	Overdue         bool `json:"overdue"`
-}
-
-type ProcessedOffersSummary struct {
-	ProcessedOffersCount       int             `json:"processedOffersCount"`
-	UnusedOffersCount          int             `json:"unusedOffersCount"`
-	LastUnusedOfferAt          *time.Time      `json:"lastUnusedOfferAt,omitempty"`
-	LastUsedOfferAt            *time.Time      `json:"lastUsedOfferAt,omitempty"`
-	RejectSummaryLastOffers    []RejectSummary `json:"rejectSummaryLastOffers,omitempty"`
-	RejectSummaryLaunchAttempt []RejectSummary `json:"rejectSummaryLaunchAttempt,omitempty"`
-}
-
-type LastUnusedOffers struct {
-	Offer     Offer     `json:"offer"`
-	Timestamp time.Time `json:"timestamp"`
-	Reason    []string  `json:"reason"`
-}
-
-type Offer struct {
-	ID         string           `json:"id"`
-	AgentID    string           `json:"agentId"`
-	Hostname   string           `json:"hostname"`
-	Resources  []OfferResources `json:"resources"`
-	Attributes []Attributes     `json:"attributes"`
 }
 
 type OfferResources struct {
@@ -87,19 +64,12 @@ type Range struct {
 	End   int `json:"end"`
 }
 
-// RejectSummary documents the reason and number of times a specific rejection occurred
-type RejectSummary struct {
-	Reason    string `json:"reason"`
-	Declined  int    `json:"declined"`
-	Processed int    `json:"processed"`
-}
-
 // ProcessedOffersSummary contains statistics for processed offers.
 type ProcessedOffersSummary struct {
 	ProcessedOffersCount       int32               `json:"processedOffersCount"`
 	UnusedOffersCount          int32               `json:"unusedOffersCount"`
-	LastUnusedOfferAt          *string             `json:"lastUnusedOfferAt,omitempty"`
-	LastUsedOfferAt            *string             `json:"lastUsedOfferAt,omitempty"`
+	LastUnusedOfferAt          *time.Time          `json:"lastUnusedOfferAt,omitempty"`
+	LastUsedOfferAt            *time.Time          `json:"lastUsedOfferAt,omitempty"`
 	RejectSummaryLastOffers    []DeclinedOfferStep `json:"rejectSummaryLastOffers,omitempty"`
 	RejectSummaryLaunchAttempt []DeclinedOfferStep `json:"rejectSummaryLaunchAttempt,omitempty"`
 }
