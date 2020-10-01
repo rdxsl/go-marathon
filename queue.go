@@ -28,14 +28,14 @@ type Queue struct {
 
 // Item represents a single item in the Queue.  These are generally tied to an application or pod
 type Item struct {
-	Count                  int                    `json:"count,omitempty"`
-	Delay                  Delay                  `json:"delay,omitempty"`
-	Since                  time.Time              `json:"since"`
-	Application            *Application           `json:"app,omitempty"`
-	Pod                    *Pod                   `json:"pod,omitempty"`
-	ProcessedOffersSummary ProcessedOffersSummary `json:"processedOffersSummary,omitempty"`
-	LastUnusedOffers       []UnusedOffer          `json:"lastUnusedOffers,omitempty"`
-	Role                   string                 `json:"role"`
+	Count                  int                     `json:"count,omitempty"`
+	Delay                  Delay                   `json:"delay,omitempty"`
+	Since                  time.Time               `json:"since"`
+	Application            *Application            `json:"app,omitempty"`
+	Pod                    *Pod                    `json:"pod,omitempty"`
+	ProcessedOffersSummary *ProcessedOffersSummary `json:"processedOffersSummary,omitempty"`
+	LastUnusedOffers       []UnusedOffer           `json:"lastUnusedOffers,omitempty"`
+	Role                   string                  `json:"role"`
 }
 
 // Delay cotains the application postpone information
