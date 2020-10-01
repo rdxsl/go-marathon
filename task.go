@@ -69,6 +69,7 @@ type KillApplicationTasksOpts struct {
 type KillTaskOpts struct {
 	Scale bool `url:"scale,omitempty"`
 	Force bool `url:"force,omitempty"`
+	Wipe  bool `url:"wipe,omitempty"`
 }
 
 // HasHealthCheckResults checks if the task has any health checks
@@ -161,7 +162,7 @@ func (r *marathonClient) KillTasks(tasks []string, opts *KillTaskOpts) error {
 	}
 	post.IDs = tasks
 
-	return r.apiPost(path, &post, nil)
+	return r.ApiPost(path, &post, nil)
 }
 
 // TaskEndpoints gets the endpoints i.e. HOST_IP:DYNAMIC_PORT for a specific application service

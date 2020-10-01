@@ -29,41 +29,19 @@ type Queue struct {
 // Item represents a single item in the Queue.  These are generally tied to an application or pod
 type Item struct {
 	Count                  int                     `json:"count,omitempty"`
-	Delay                  *Delay                  `json:"delay,omitempty"`
+	Delay                  Delay                   `json:"delay,omitempty"`
 	Since                  time.Time               `json:"since"`
 	Application            *Application            `json:"app,omitempty"`
 	Pod                    *Pod                    `json:"pod,omitempty"`
 	ProcessedOffersSummary *ProcessedOffersSummary `json:"processedOffersSummary,omitempty"`
-	LastUnusedOffers       []LastUnusedOffers      `json:"lastUnusedOffers,omitempty"`
+	LastUnusedOffers       []UnusedOffer           `json:"lastUnusedOffers,omitempty"`
+	Role                   string                  `json:"role"`
 }
 
 // Delay cotains the application postpone information
 type Delay struct {
 	TimeLeftSeconds int  `json:"timeLeftSeconds"`
 	Overdue         bool `json:"overdue"`
-}
-
-type ProcessedOffersSummary struct {
-	ProcessedOffersCount       int             `json:"processedOffersCount"`
-	UnusedOffersCount          int             `json:"unusedOffersCount"`
-	LastUnusedOfferAt          *time.Time      `json:"lastUnusedOfferAt,omitempty"`
-	LastUsedOfferAt            *time.Time      `json:"lastUsedOfferAt,omitempty"`
-	RejectSummaryLastOffers    []RejectSummary `json:"rejectSummaryLastOffers,omitempty"`
-	RejectSummaryLaunchAttempt []RejectSummary `json:"rejectSummaryLaunchAttempt,omitempty"`
-}
-
-type LastUnusedOffers struct {
-	Offer     Offer     `json:"offer"`
-	Timestamp time.Time `json:"timestamp"`
-	Reason    []string  `json:"reason"`
-}
-
-type Offer struct {
-	ID         string           `json:"id"`
-	AgentID    string           `json:"agentId"`
-	Hostname   string           `json:"hostname"`
-	Resources  []OfferResources `json:"resources"`
-	Attributes []Attributes     `json:"attributes"`
 }
 
 type OfferResources struct {
@@ -86,11 +64,28 @@ type Range struct {
 	End   int `json:"end"`
 }
 
-// RejectSummary documents the reason and number of times a specific rejection occurred
-type RejectSummary struct {
+// ProcessedOffersSummary contains statistics for processed offers.
+type ProcessedOffersSummary struct {
+	ProcessedOffersCount       int32               `json:"processedOffersCount"`
+	UnusedOffersCount          int32               `json:"unusedOffersCount"`
+	LastUnusedOfferAt          *time.Time          `json:"lastUnusedOfferAt,omitempty"`
+	LastUsedOfferAt            *time.Time          `json:"lastUsedOfferAt,omitempty"`
+	RejectSummaryLastOffers    []DeclinedOfferStep `json:"rejectSummaryLastOffers,omitempty"`
+	RejectSummaryLaunchAttempt []DeclinedOfferStep `json:"rejectSummaryLaunchAttempt,omitempty"`
+}
+
+// DeclinedOfferStep contains how often an offer was declined for a specific reason
+type DeclinedOfferStep struct {
 	Reason    string `json:"reason"`
-	Declined  int    `json:"declined"`
-	Processed int    `json:"processed"`
+	Declined  int32  `json:"declined"`
+	Processed int32  `json:"processed"`
+}
+
+// UnusedOffer contains which offers weren't used and why
+type UnusedOffer struct {
+	Offer     Offer    `json:"offer"`
+	Reason    []string `json:"reason"`
+	Timestamp string   `json:"timestamp"`
 }
 
 // Queue retrieves content of the marathon launch queue

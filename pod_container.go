@@ -51,9 +51,9 @@ type PodExec struct {
 // PodArtifact describes how to obtain a generic artifact for a pod
 type PodArtifact struct {
 	URI        string `json:"uri,omitempty"`
-	Extract    bool   `json:"extract,omitempty"`
-	Executable bool   `json:"executable,omitempty"`
-	Cache      bool   `json:"cache,omitempty"`
+	Extract    *bool  `json:"extract,omitempty"`
+	Executable *bool  `json:"executable,omitempty"`
+	Cache      *bool  `json:"cache,omitempty"`
 	DestPath   string `json:"destPath,omitempty"`
 }
 
@@ -121,13 +121,13 @@ func (p *PodContainer) SetImage(image *PodContainerImage) *PodContainer {
 	return p
 }
 
-// EmptyEnvironment initialized env to empty
+// EmptyEnvs initialized env to empty
 func (p *PodContainer) EmptyEnvs() *PodContainer {
 	p.Env = make(map[string]string)
 	return p
 }
 
-// AddEnvironment adds an environment variable for a pod container
+// AddEnv adds an environment variable for a pod container
 func (p *PodContainer) AddEnv(name, value string) *PodContainer {
 	if p.Env == nil {
 		p = p.EmptyEnvs()
@@ -136,7 +136,7 @@ func (p *PodContainer) AddEnv(name, value string) *PodContainer {
 	return p
 }
 
-// ExtendEnvironment extends the environment for a pod container
+// ExtendEnv extends the environment for a pod container
 func (p *PodContainer) ExtendEnv(env map[string]string) *PodContainer {
 	if p.Env == nil {
 		p = p.EmptyEnvs()
