@@ -28,13 +28,14 @@ type Queue struct {
 
 // Item represents a single item in the Queue.  These are generally tied to an application or pod
 type Item struct {
-	Count                  int                     `json:"count,omitempty"`
-	Delay                  *Delay                  `json:"delay,omitempty"`
-	Since                  time.Time               `json:"since"`
-	Application            *Application            `json:"app,omitempty"`
-	Pod                    *Pod                    `json:"pod,omitempty"`
-	ProcessedOffersSummary *ProcessedOffersSummary `json:"processedOffersSummary,omitempty"`
-	LastUnusedOffers       []LastUnusedOffers      `json:"lastUnusedOffers,omitempty"`
+	Count                  int                    `json:"count,omitempty"`
+	Delay                  Delay                  `json:"delay,omitempty"`
+	Since                  time.Time              `json:"since"`
+	Application            *Application           `json:"app,omitempty"`
+	Pod                    *Pod                   `json:"pod,omitempty"`
+	ProcessedOffersSummary ProcessedOffersSummary `json:"processedOffersSummary,omitempty"`
+	LastUnusedOffers       []LastUnusedOffers     `json:"lastUnusedOffers,omitempty"`
+	Role                   string                 `json:"role"`
 }
 
 // Delay cotains the application postpone information
@@ -91,6 +92,30 @@ type RejectSummary struct {
 	Reason    string `json:"reason"`
 	Declined  int    `json:"declined"`
 	Processed int    `json:"processed"`
+}
+
+// ProcessedOffersSummary contains statistics for processed offers.
+type ProcessedOffersSummary struct {
+	ProcessedOffersCount       int32               `json:"processedOffersCount"`
+	UnusedOffersCount          int32               `json:"unusedOffersCount"`
+	LastUnusedOfferAt          *string             `json:"lastUnusedOfferAt,omitempty"`
+	LastUsedOfferAt            *string             `json:"lastUsedOfferAt,omitempty"`
+	RejectSummaryLastOffers    []DeclinedOfferStep `json:"rejectSummaryLastOffers,omitempty"`
+	RejectSummaryLaunchAttempt []DeclinedOfferStep `json:"rejectSummaryLaunchAttempt,omitempty"`
+}
+
+// DeclinedOfferStep contains how often an offer was declined for a specific reason
+type DeclinedOfferStep struct {
+	Reason    string `json:"reason"`
+	Declined  int32  `json:"declined"`
+	Processed int32  `json:"processed"`
+}
+
+// UnusedOffer contains which offers weren't used and why
+type UnusedOffer struct {
+	Offer     Offer    `json:"offer"`
+	Reason    []string `json:"reason"`
+	Timestamp string   `json:"timestamp"`
 }
 
 // Queue retrieves content of the marathon launch queue
