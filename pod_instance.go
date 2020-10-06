@@ -41,8 +41,34 @@ type PodInstanceStateHistory struct {
 }
 
 // PodInstanceID contains the instance ID
-type PodInstanceID struct {
-	ID string `json:"idString"`
+type PodInstanceID string
+
+func (p *PodInstanceID) UnmarshalJSON(b []byte) (err error) {
+	/* Supports both:
+	  "instanceId": {
+	    "idString": "a.b.c.d.e"
+	  },
+
+		and:
+
+		"instanceId" : "a.b.c.d.e"
+	*/
+
+	var instanceIDObj struct {
+		IDString string `json:"idString"`
+	}
+	if err := json.Unmarshal(b, &instanceIDObj); err != nil {
+		var idStr string
+		err = json.Unmarshal(b, &idStr)
+		if err != nil {
+			return err
+		}
+		*p = PodInstanceID(idStr)
+	} else {
+		*p = PodInstanceID(instanceIDObj.IDString)
+	}
+
+	return nil
 }
 
 // PodAgentInfo contains info about the agent the instance is running on
